@@ -82,9 +82,9 @@ if st.button('Predict Match'):
     else:
         prediction = rf.predict(tm_df[predictors3])
         if prediction == 1:
-            st.markdown(""" The selected team will **WIN** the match""")
+            st.write(selected_team ,""" will **WIN** the match""")
         else:
-            st.markdown(""" The selected team will **NOT WIN** the match""")
+            st.write(selected_team ,"""  will **NOT WIN** the match""")
 
         st.markdown(""" A trained random forrest model is used to make this prediction, and rolling averages for 
                         the performance in past five games for each of the teams have been considered.""")
@@ -94,8 +94,7 @@ if st.button('Predict Match'):
 shooting = ["gls_rolling", "sh_rolling","sot_rolling","dist_rolling",'xg_x_rolling']
 shooting = [*shooting, shooting[0]]
 
-st.table(dfd_rolling)
-dfd_rolling['team']
+
 
 tm_dfd = dfd_rolling[dfd_rolling['team'] == selected_team].tail(1) # get the last game row for the team. has the latest rolling stats.
 
@@ -104,25 +103,30 @@ opp_dfd = dfd_rolling[dfd_rolling['team'] == selected_opponent].tail(1)
 
 
 if st.button("Compare Teams"):
+    shooting = ["gls_rolling", "sh_rolling","sot_rolling","dist_rolling",'xg_x_rolling']
+    shooting = [*shooting, shooting[0]]
+
+
+    tm_dfd = dfd_rolling[dfd_rolling['team'] == selected_team].tail(1) # get the last game row for the team. has the latest rolling stats.
+    opp_dfd = dfd_rolling[dfd_rolling['team'] == selected_opponent].tail(1)
+
+
 
     fig = go.Figure(
-        data=[
-            go.Scatterpolar(r=tm_dfd[shooting], theta=shooting, name= selected_team),
-            go.Scatterpolar(r=opp_dfd[shooting], theta=shooting, name= selected_opponent),
+    data=[
+        go.Scatterpolar(r=tm_dfd[shooting].values[0], theta=shooting, name= selected_team),
+        go.Scatterpolar(r=opp_dfd[shooting].values[0], theta=shooting, name= selected_opponent),
 
-        ],
-        layout=go.Layout(
-            title=go.layout.Title(text='team comparison'),
-            polar={'radialaxis': {'visible': False}},
-            showlegend=True
-        )
+    ],
+
+    layout=go.Layout(
+        title=go.layout.Title(text='team comparison'),
+        polar={'radialaxis': {'visible': False}},
+        showlegend=True
+    )
     )
 
-    pyo.plot(fig)
-
-
-
-
+    st.plotly_chart(fig)
 
 
 
