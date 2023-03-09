@@ -36,7 +36,9 @@ brief includes using the statistics obtained in the previous matches and predict
 This app uses a trained [random forrest model](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) to predict champions league matches. The features used to make
 this prediction are engineered from statistics available before the match. 
 
-After the prediction some handy comparison between the selected team and opponent are given using normalised team statistics.""")
+To operate, choose the team and the opponent as well as the venue form the side bar. Then hit the "Predict Match" button.
+
+Before the prediction some handy comparison between the selected team and opponent are given using normalised team statistics.""")
 
 st.caption('Data Source: All data is scraped from [FBref](https://fbref.com/en/comps/8/Champions-League-Stats)', unsafe_allow_html=True)
 
@@ -114,16 +116,6 @@ if st.sidebar.button('Predict Match'):
     if selected_team == selected_opponent:
         st.markdown("**Team and opponent must be DIFFERENT!**") # Selection check
     else:
-        st.header("Game Prediction")
-        prediction = rf.predict(tm_df[predictors3])
-        if prediction == 1:
-            st.write(selected_team ,""" will **WIN** the match""")
-        else:
-            st.write(selected_team ,"""  will **NOT WIN** the match""")
-
-        st.markdown(""" A trained random forrest model is used to make this prediction, and rolling averages for 
-                        the performance in past five games for each of the teams have been considered.""")
-        
         st.header("Comparative Statistics")
         st.write("""This section presents a comprehensive comparison between the performance statistics between the teams.
         the presented data is averaged oer the last 3 games for each team and normalised""")
@@ -195,34 +187,55 @@ Lost -- Challenges Lost Number of unsucessful attempts to challenge a dribbling 
 
 #Plotting Possession
 
-        plot_comparison(tm_dfd,opp_dfd,defence,selected_team, selected_opponent, 'Possession')
+        plot_comparison(tm_dfd,opp_dfd,possession,selected_team, selected_opponent, 'Possession')
         expander = st.expander("**Glossary**")
         expander.markdown('''
-Poss -- Possession Calculated as the percentage of passes attempted
-Touches -- Number of times a player touched the ball.
-Succ% -- Successful Take-On %Percentage of Take-Ons Completed Successfully
-Tkld% -- Tackled During Take-On Percentage Percentage of time tackled by a defender during a take-on attempt Minimum .5 take-ons per squad game to qualify as a leader
-rgC -- Progressive Carries Carries that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any carry into the penalty area. Excludes carries which end in the defending 50% of the pitch
-PrgR -- Progressive Passes Rec
-Progressive Passes Received Completed passes that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any completed pass into the penalty area. Excludes passes from the defending 40% of the pitch
+Poss -- Possession Calculated as the percentage of passes attempted\n
+Touches -- Number of times a player touched the ball.\n
+Succ% -- Successful Take-On %Percentage of Take-Ons Completed Successfully\n
+Tkld% -- Tackled During Take-On Percentage Percentage of time tackled by a defender during a take-on attempt Minimum .5 take-ons per squad game to qualify as a leader\n
+rgC -- Progressive Carries Carries that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any carry into the penalty area. Excludes carries which end in the defending 50% of the pitch\n
+PrgR -- Progressive Passes Rec Progressive Passes Received Completed passes that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any completed pass into the penalty area. Excludes passes from the defending 40% of the pitch
 ''')
+        
+        st.header("Game Prediction")
+        prediction = rf.predict(tm_df[predictors3])
+        if prediction == 1:
+            st.write(selected_team ,""" will **WIN** the match""")
+        else:
+            st.write(selected_team ,"""  will **NOT WIN** the match""")
 
-# To be implemented later
-
-# importance = pd.Series(data=importances, index=  predictors3)
-# # Sort importances
-# importances_sorted = importance.sort_values()
-# st.table(importances_sorted)
-
-# plt.figure(figsize=(5,20))
-# plt.subplots_adjust(top = 1, bottom = 0)
-# importances_sorted.plot(kind='barh', color='red')
-# col1.pyplot(plt)
-# st.table(importance)
-
-# importances_sorted.plot(kind='barh', color='blue')
+        st.markdown(""" A trained random forrest model is used to make this prediction, and rolling averages for 
+                        the performance in past five games for each of the teams have been considered. The 10 most important
+                        features chosen by the random forrest classifier are presented below. As expected, the opposition team
+                        has the highest score. """)
 
 
+        importance = pd.Series(data=importances, index= predictors3)
+        # Sort importances
+        importances_sorted = importance.sort_values(ascending=False)
+        #plt.figure(figsize=(5,20))
+        fig, ax = plt.subplots()
+        plt.title('Features Importances')
+        plt.gca().invert_yaxis()
+        importances_sorted[0:-44].plot(kind='barh', color='blue') # # Lets plot the top 10. 
+        plt.gca().invert_yaxis()
+        st.pyplot(fig)
+
+        expander = st.expander("**Glossary**")
+        expander.markdown('''
+opp_code -- The unique code for the opposing team\n
+sot%_opp_rolling -- \n
+save%_opp_rolling-- \n
+crs_rolling	-- \n
+fls_rolling+sot%_rolling-- \n
+sot%_rolling-- \n
+fls_rolling-- \n
+poss_x_rolling-- \n
+crs_opp_rolling	-- \n
+int_opp_rolling-- \n
+
+''')
 
 
 
