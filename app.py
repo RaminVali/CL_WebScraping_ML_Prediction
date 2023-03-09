@@ -8,7 +8,8 @@ import plotly.graph_objects as go
 import plotly.offline as pyo
 
 # Loading the model and the associated data
-[predictors3, df_rolling, rf, importances,dfd_rolling] = pickle.load(open('appData.pkl', 'rb'))
+dfd_rolling = pd.read_csv('dfd_rolling.csv')
+[predictors3, df_rolling, rf, importances,] = pickle.load(open('appData.pkl', 'rb'))
 
 selected_columns = ['team','venue','opponent','venue_code','opp_code','hour','day_code',
  'gf_rolling','gls_rolling','sh_rolling','sot_rolling','sot%_rolling','g/sh_rolling',
