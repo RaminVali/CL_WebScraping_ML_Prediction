@@ -6,14 +6,16 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 import plotly.graph_objects as go
 import plotly.offline as pyo
+import plotly.express as px
 
 # Loading the model and the associated data
 dfd_rolling = pd.read_csv('dfd_rolling.csv')
-[predictors3, df_rolling, rf, importances,] = pickle.load(open('appData.pkl', 'rb'))
+
+[combined, precision_weight, precision_raw, importances_sorted,rf, predictors3,df_rolling] = pickle.load(open('appData.pickle', 'rb'))
 
 selected_columns = ['team','venue','opponent','venue_code','opp_code','hour','day_code',
- 'gf_rolling','gls_rolling','sh_rolling','sot_rolling','sot%_rolling','g/sh_rolling',
- 'pk_rolling','pkatt_rolling','gf_opp_rolling','gls_opp_rolling','sh_opp_rolling','sot_opp_rolling',
+ 'gls_rolling','sh_rolling','sot_rolling','sot%_rolling','g/sh_rolling',
+ 'pk_rolling','pkatt_rolling','gls_opp_rolling','sh_opp_rolling','sot_opp_rolling',
  'sot%_opp_rolling','g/sh_opp_rolling','pk_opp_rolling','pkatt_opp_rolling','sota_rolling',
  'saves_rolling','cs_rolling','pka_rolling','pksv_rolling','pkm_rolling','sota_opp_rolling',
  'saves_opp_rolling','save%_opp_rolling','cs_opp_rolling','pka_opp_rolling','pksv_opp_rolling',
@@ -21,7 +23,7 @@ selected_columns = ['team','venue','opponent','venue_code','opp_code','hour','da
  'int_rolling','tkl+int_rolling','tklw_opp_rolling','int_opp_rolling','tkl+int_opp_rolling',
  'poss_x_rolling','poss_opp_rolling','crdy_rolling','crdr_rolling','2crdy_rolling', 'fls_rolling',
  'og_rolling','crdy_opp_rolling','crdr_opp_rolling','2crdy_opp_rolling','fls_opp_rolling',
- 'og_opp_rolling','fls_rolling+sot%_rolling']
+ 'og_opp_rolling','gf_rolling', 'gf_opp_rolling', 'round_code', 'comp_code']
 
 
 
@@ -44,16 +46,15 @@ Before the prediction some handy comparison between the selected team and oppone
 st.caption('Data Source: All data is scraped from [FBref](https://fbref.com/en/comps/8/Champions-League-Stats)', unsafe_allow_html=True)
 
 
-
 # Sidebar
 st.sidebar.header('User Input Features')
-selected_team = st.sidebar.selectbox('Team',df_rolling [df_rolling['season']=='2022-2023']['team'].unique()) # select your team
+selected_team = st.sidebar.selectbox('Team',dfd_rolling [dfd_rolling['season']=='2022-2023']['team'].unique()) # select your team
 
-selected_opponent = st.sidebar.selectbox('Opponent', df_rolling [df_rolling['season']=='2022-2023']['team'].unique()) # Select opponent (not any opponent but Champions League opponent)
+selected_opponent = st.sidebar.selectbox('Opponent', dfd_rolling [dfd_rolling['season']=='2022-2023']['team'].unique()) # Select opponent (not any opponent but Champions League opponent)
 
 if selected_team == selected_opponent:
     st.sidebar.markdown("**Team and opponent must be DIFFERENT!**") # Selection check
-selected_venue = st.sidebar.selectbox('Venue', df_rolling["venue"].unique()) # choose home or away
+selected_venue = st.sidebar.selectbox('Venue', dfd_rolling["venue"].unique()) # choose home or away
 if selected_venue == 'home':
     v_code = 1
 else:
@@ -68,11 +69,15 @@ tm_df['opponent'] = selected_opponent
 tm_df['venue'] = selected_venue
 tm_df['venue_code'] = v_code
 
+
 #Preparing the comparative data for display 
 tm_dfd = dfd_rolling[dfd_rolling['team'] == selected_team].tail(1) # get the last game row for the team. has the latest rolling stats.
 opp_dfd = dfd_rolling[dfd_rolling['team'] == selected_opponent].tail(1)
 
 
+
+
+# Setting up Display metrics
 shooting = ["gls_rolling", "sh_rolling","sot_rolling","dist_rolling",'xg_x_rolling','fk_rolling']
 shooting = [*shooting, shooting[0]]
 
@@ -94,7 +99,7 @@ possession = [*possession, possession[0]]
 
 
 
-# Function to plot the radar plots
+# # Function to plot the radar plots
 def plot_comparison(tm_dfd,opp_dfd,metric,selected_team, selected_opponent, metric_name):
     fig = go.Figure(
     data=[
@@ -199,6 +204,9 @@ rgC -- Progressive Carries Carries that move the ball towards the opponent's goa
 PrgR -- Progressive Passes Rec Progressive Passes Received Completed passes that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any completed pass into the penalty area. Excludes passes from the defending 40% of the pitch
 ''')
         
+
+        ## Prediction Part
+        #        
         st.header("Game Prediction")
         prediction = rf.predict(tm_df[predictors3])
         if prediction == 1:
@@ -212,35 +220,29 @@ PrgR -- Progressive Passes Rec Progressive Passes Received Completed passes that
                         has the highest score. """)
 
 
-        importance = pd.Series(data=importances, index= predictors3)
-        # Sort importances
-        importances_sorted = importance.sort_values(ascending=False)
-        #plt.figure(figsize=(5,20))
         fig, ax = plt.subplots()
-        plt.title('Features Importances')
+        plt.title('Feature Importances for Random Forrest Classifier')
         plt.gca().invert_yaxis()
-        importances_sorted[0:-44].plot(kind='barh', color='blue') # # Lets plot the top 10. 
-        plt.gca().invert_yaxis()
+        importances_sorted.plot(kind='barh', color='blue',figsize = (5,10), grid = True, xlabel = 'Feature Importances') # # Lets plot the top 10. 
         st.pyplot(fig)
+
 
         expander = st.expander("**Glossary**")
         expander.markdown('''
-opp_code -- The unique code for the opposing team\n
-sot%_opp_rolling -- \n
-save%_opp_rolling-- \n
-crs_rolling	-- \n
-fls_rolling+sot%_rolling-- \n
-sot%_rolling-- \n
-fls_rolling-- \n
-poss_x_rolling-- \n
-crs_opp_rolling	-- \n
-int_opp_rolling-- \n
+        opp_code -- The unique code for the opposing team\n
+        sot%_opp_rolling -- \n
+        save%_opp_rolling-- \n
+        crs_rolling	-- \n
+        fls_rolling+sot%_rolling-- \n
+        sot%_rolling-- \n
+        fls_rolling-- \n
+        poss_x_rolling-- \n
+        crs_opp_rolling	-- \n
+        int_opp_rolling-- \n
 
-''')
+        ''')
 
-
-
-
-
-
-
+        a = pd.crosstab(index=combined["actual"], columns=combined["predicted"])
+        a = a.div(a.sum(axis=1), axis = 0)
+        fig = px.imshow(a, color_continuous_scale='blues', text_auto=True, x = ['not won', 'won'], y = ['won','not won'])
+        st.plotly_chart(fig)
