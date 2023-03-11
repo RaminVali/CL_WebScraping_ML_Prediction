@@ -1,7 +1,6 @@
 import pandas as pd
 import pickle
 import streamlit as st
-from PIL import Image
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 import plotly.graph_objects as go
