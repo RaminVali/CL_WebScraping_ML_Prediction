@@ -35,7 +35,7 @@ app.py -- The streamit app that we can deploy to the cloud.
 ![Deploy1](Deploy1.png)
 ![Deploy2](Deploy2.png)
 
-Given GCP charges money to keep the project running, I have also deployed in this free platform here:
+Given GCP charges money to keep the project running, I have also deployed in this cheaper platform [here](https://cl-prediction.herokuapp.com/):
 
 
 
