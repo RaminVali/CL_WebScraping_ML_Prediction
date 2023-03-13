@@ -23,7 +23,19 @@ prediction -- Prediction on a team wining based on the chosen features. Two algo
 
 app.py -- The streamit app that we can deploy to the cloud.
 
-## Deployyment:
+## Deployment:
+
+- Create a project in GCP. 
+- build the project from your repository as below:
+![Build1](Build1.png)
+![Build2](Build2.png)
+![Build3](Build3.png)
+
+- Deploy the project, I use choice 30 given my location. 
+![Deploy1](Deploy1.png)
+![Deploy2](Deploy2.png)
+
+Given GCP charges money to keep the project running, I have also deployed in this free platform here:
 
 
 
