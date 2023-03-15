@@ -155,12 +155,12 @@ if st.sidebar.button('Predict Match'):
         plot_comparison(tm_dfd,opp_dfd,passing,selected_team, selected_opponent, 'Passing')
         expander = st.expander("**Glossary**")
         expander.markdown('''
-TotDist -- Total Passing Distance\n
-PrgDist -- Progressive Passing Distance\n
-KP -- Key Passes Passes that directly lead to a shot (assisted shots)\n
-PPA -- Passes into Penalty Area Completed passes into the 18-yard box Not including set pieces\n
-CrsPA -- Crosses into Penalty Area Completed crosses into the 18-yard box Not including set pieces\n
-PrgP -- Progressive Passes
+TotDist-rolling -- Rolling average of total Passing Distance\n
+PrgDist-rolling -- Rolling average of progressive Passing Distance\n
+KP-rolling -- Rolling average of key Passes that directly lead to a shot (assisted shots)\n
+PPA-rolling -- Rolling average of passes into Penalty Area Completed passes into the 18-yard box Not including set pieces\n
+CrsPA-rolling -- Rolling average of crosses into Penalty Area Completed crosses into the 18-yard box Not including set pieces\n
+PrgP-rolling -- Rolling average of progressive Passes
 ''')
 
 
@@ -168,12 +168,12 @@ PrgP -- Progressive Passes
         plot_comparison(tm_dfd,opp_dfd,goal_and_shot,selected_team, selected_opponent, 'Goal and Shot Creation')
         expander = st.expander("**Glossary**")
         expander.markdown('''
-SCA -- Shot-Creating Actions\n
-PassLive -- SCA (PassLive) Completed live-ball passes that lead to a shot attempt\n
-Fld -- SCA (Fld) Fouls drawn that lead to a shot attempt\n
-TO -- GCA (TO) Successful take-ons that lead to a goal\n
-Def -- SCA (Def) Defensive actions that lead to a shot attempt\n
-PassDead -- SCA (PassDead) Completed dead-ball passes that lead to a shot attempt.\n
+SCA-rolling -- Rolling average of Shot-Creating Actions\n
+PassLive-rolling -- SCA (PassLive) Rolling average of Completed live-ball passes that lead to a shot attempt\n
+Fld-rolling -- SCA (Fld) Rolling average of Fouls drawn that lead to a shot attempt\n
+TO-rolling -- GCA (TO) Rolling average of Successful take-ons that lead to a goal\n
+Def-rolling -- SCA (Def) Rolling average of Defensive actions that lead to a shot attempt\n
+PassDead-rolling -- SCA (PassDead) Rolling average of Completed dead-ball passes that lead to a shot attempt.\n
 ''')
 
 
@@ -181,12 +181,12 @@ PassDead -- SCA (PassDead) Completed dead-ball passes that lead to a shot attemp
         plot_comparison(tm_dfd,opp_dfd,defence,selected_team, selected_opponent, 'Defensive Actions')
         expander = st.expander("**Glossary**")
         expander.markdown('''
-TklW -- Tackles Won Tackles in which the tackler's team won possession of the ball\n
-Def 3rd -- Tackles (Def 3rd) Tackles in defensive 1/3\n
-Mid 3rd -- Tackles (Mid 3rd) Tackles in middle 1/3\n
-Att 3rd -- Tackles (Att 3rd) Tackles in attacking 1/3\n
-Tkl% -- % of dribblers tackled Percentage of dribblers tackled Dribblers tackled divided by number of attempts to challenge an opposing dribbler\n
-Lost -- Challenges Lost Number of unsucessful attempts to challenge a dribbling player
+TklW-rolling -- Rolling average of Tackles Won Tackles in which the tackler's team won possession of the ball\n
+Def 3rd-rolling -- Rolling average of Tackles (Def 3rd) Tackles in defensive 1/3\n
+Mid 3rd-rolling -- Rolling average of Tackles (Mid 3rd) Tackles in middle 1/3\n
+Att 3rd-rolling -- Rolling average of Tackles (Att 3rd) Tackles in attacking 1/3\n
+Tkl%-rolling -- Rolling average of % of dribblers tackled Percentage of dribblers tackled Dribblers tackled divided by number of attempts to challenge an opposing dribbler\n
+Lost-rolling -- Rolling average of Challenges Lost Number of unsuccessful attempts to challenge a dribbling player
 ''')
 
 
@@ -195,12 +195,12 @@ Lost -- Challenges Lost Number of unsucessful attempts to challenge a dribbling 
         plot_comparison(tm_dfd,opp_dfd,possession,selected_team, selected_opponent, 'Possession')
         expander = st.expander("**Glossary**")
         expander.markdown('''
-Poss -- Possession Calculated as the percentage of passes attempted\n
-Touches -- Number of times a player touched the ball.\n
-Succ% -- Successful Take-On %Percentage of Take-Ons Completed Successfully\n
-Tkld% -- Tackled During Take-On Percentage Percentage of time tackled by a defender during a take-on attempt Minimum .5 take-ons per squad game to qualify as a leader\n
-rgC -- Progressive Carries Carries that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any carry into the penalty area. Excludes carries which end in the defending 50% of the pitch\n
-PrgR -- Progressive Passes Rec Progressive Passes Received Completed passes that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any completed pass into the penalty area. Excludes passes from the defending 40% of the pitch
+Poss-rolling -- Rolling average of Possession Calculated as the percentage of passes attempted\n
+Touches-rolling -- Rolling average of Number of times a player touched the ball.\n
+Succ%-rolling -- Rolling average of Successful Take-On %Percentage of Take-Ons Completed Successfully\n
+Tkld%-rolling -- Rolling average of Tackled During Take-On Percentage Percentage of time tackled by a defender during a take-on attempt Minimum .5 take-ons per squad game to qualify as a leader\n
+rgC-rolling -- Rolling average of Progressive Carries Carries that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any carry into the penalty area. Excludes carries which end in the defending 50% of the pitch\n
+PrgR-rolling -- Rolling average of Progressive Passes Rec Progressive Passes Received Completed passes that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any completed pass into the penalty area. Excludes passes from the defending 40% of the pitch
 ''')
         
 
@@ -229,15 +229,15 @@ PrgR -- Progressive Passes Rec Progressive Passes Received Completed passes that
         expander = st.expander("**Glossary**")
         expander.markdown('''
         opp_code -- The unique code for the opposing team\n
-        sot%_opp_rolling -- \n
-        save%_opp_rolling-- \n
-        crs_rolling	-- \n
-        fls_rolling+sot%_rolling-- \n
-        sot%_rolling-- \n
-        fls_rolling-- \n
-        poss_x_rolling-- \n
-        crs_opp_rolling	-- \n
-        int_opp_rolling-- \n
+        sot%_opp_rolling -- Opposition % Shots on target\n
+        save%_opp_rolling-- Opposition keeper % saves\n
+        crs_rolling	-- Home team Crosses\n
+        fls_rolling+sot%_rolling-- Home team fouls + shots on target %\n
+        sot%_rolling-- Home team shots on target %\n
+        fls_rolling-- Home team fouls\n
+        poss_x_rolling-- Home team Possession\n
+        crs_opp_rolling	-- Opposition team crosses\n
+        int_opp_rolling-- Opposition Interceptions\n
 
         ''')
 
