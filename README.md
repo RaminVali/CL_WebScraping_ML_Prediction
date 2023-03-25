@@ -8,7 +8,7 @@ In this project we scrape statistics tables for each Champions League season and
 
 ## Running the Project
 
-- The model can be run via webapp written in streamlit. Here is the [link]().
+- The model can be run via webapp written in streamlit. Here is the [link]((https://cl-prediction.herokuapp.com/)).
 - Alternatively, create an environment using the requirements.txt file provided, and run each of the notebook in the order below. You can run them individually as well since the data used for ech notebook is already in the directory. 
 
 ## File Descriptions:
