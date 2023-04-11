@@ -6,6 +6,8 @@ from sklearn.ensemble import RandomForestClassifier
 import plotly.graph_objects as go
 import plotly.offline as pyo
 import plotly.express as px
+import base64
+
 
 # Loading the model and the associated data
 dfd_rolling = pd.read_csv('dfd_rolling.csv')
@@ -28,8 +30,16 @@ selected_columns = ['team','venue','opponent','venue_code','opp_code','hour','da
 
 # Title, title image and introductory explanation
 st.title('Champions League Match Prediction')
-st.image('image.jpg')
-st.caption('Photo by Timothy Tan on Unsplash', unsafe_allow_html=False)
+# resizing gif
+file_ = open("animation2.gif", "rb")
+contents = file_.read()
+data_url = base64.b64encode(contents).decode("utf-8")
+file_.close()
+
+
+st.markdown(f'<img src="data:image/gif;base64,{data_url}" alt="football gif">',unsafe_allow_html=True,)
+
+st.caption('Animation curtsey of [mplsoccer](https://mplsoccer.readthedocs.io/en/latest/index.html) and [metrica-sports](https://metrica-sports.com/)', unsafe_allow_html=False)
 
 st.markdown("""
 A **hypothetical** sports channel has asked us to develop a webapp that they can refer to during their broadcasts. The
