@@ -253,5 +253,5 @@ PrgR-rolling -- Rolling average of Progressive Passes Rec Progressive Passes Rec
 
         a = pd.crosstab(index=combined["actual"], columns=combined["predicted"])
         a = a.div(a.sum(axis=1), axis = 0)
-        fig = px.imshow(a, color_continuous_scale='blues', text_auto=True, x = ['not won', 'won'], y = ['won','not won'])
+        fig = px.imshow(a, color_continuous_scale='blues', text_auto=True, x = ['won', 'not won'], y = ['won','not won'])
         st.plotly_chart(fig)
