@@ -3,10 +3,9 @@ import pickle
 import streamlit as st
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import plotly.offline as pyo
 import plotly.express as px
 import base64
-import xgboost as xgb
+import xgboost
 import plotly.express as px
 from PIL import Image
 
