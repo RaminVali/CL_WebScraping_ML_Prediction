@@ -6,3 +6,4 @@ plotly==5.13.1
 scikit-learn==1.2.1
 streamlit == 1.13.0
 altair == 4.2.2 
+py-xgboost == 1.7.1 
