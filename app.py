@@ -2,17 +2,20 @@ import pandas as pd
 import pickle
 import streamlit as st
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
 import plotly.graph_objects as go
 import plotly.offline as pyo
 import plotly.express as px
 import base64
+import xgboost as xgb
+import plotly.express as px
+from PIL import Image
+
 
 
 # Loading the model and the associated data
 dfd_rolling = pd.read_csv('dfd_rolling.csv')
 
-[combined, precision_weight, precision_raw, importances_sorted,rf, predictors3,df_rolling] = pickle.load(open('appData.pickle', 'rb'))
+[combined, precision_weight, precision_raw, XGB_model, all_cols, df_rolling] = pickle.load(open('appData.pickle', 'rb'))
 
 selected_columns = ['team','venue','opponent','venue_code','opp_code','hour','day_code',
  'gls_rolling','sh_rolling','sot_rolling','sot%_rolling','g/sh_rolling',
@@ -217,41 +220,46 @@ PrgR-rolling -- Rolling average of Progressive Passes Rec Progressive Passes Rec
         ## Prediction Part
         #        
         st.header("Game Prediction")
-        prediction = rf.predict(tm_df[predictors3])
+        prediction = XGB_model.predict(tm_df[all_cols])
         if prediction == 1:
             st.write(selected_team ,""" will **WIN** the match""")
         else:
             st.write(selected_team ,"""  will **NOT WIN** the match""")
 
-        st.markdown(""" A trained random forrest model is used to make this prediction, and rolling averages for 
-                        the performance in past five games for each of the teams have been considered. The 10 most important
-                        features chosen by the random forrest classifier are presented below. As expected, the opposition team
-                        has the highest score. """)
+        st.markdown(""" A trained XGBoot model is used to make this prediction, and rolling averages for 
+                        the performance in past five games for each of the teams have been considered.""")
 
 
+        # Plotting Fature Importances
         fig, ax = plt.subplots()
-        plt.title('Feature Importances for Random Forrest Classifier')
-        plt.gca().invert_yaxis()
-        importances_sorted.plot(kind='barh', color='blue',figsize = (5,10), grid = True, xlabel = 'Feature Importances') # # Lets plot the top 10. 
+        xgb_imp = pd.Series(XGB_model.get_booster().get_score(importance_type= 'gain'))
+        xgb_imp = xgb_imp/len(all_cols)
+        # Sort importances
+        xgb_imp_sorted = xgb_imp.sort_values()
+        # Draw a horizontal barplot of importances_sorted
+        xgb_imp_sorted.plot(kind='barh', color='blue', figsize = (5,10), grid = True, xlabel = 'Feature Importances')
+        plt.title('Feature Importance for XGBoost Algorithem')
         st.pyplot(fig)
 
-
+        '''The glossary for the top 5 most important parameters are given below:'''
         expander = st.expander("**Glossary**")
         expander.markdown('''
-        opp_code -- The unique code for the opposing team\n
-        sot%_opp_rolling -- Opposition % Shots on target\n
-        save%_opp_rolling-- Opposition keeper % saves\n
-        crs_rolling	-- Home team Crosses\n
-        fls_rolling+sot%_rolling-- Home team fouls + shots on target %\n
-        sot%_rolling-- Home team shots on target %\n
-        fls_rolling-- Home team fouls\n
-        poss_x_rolling-- Home team Possession\n
-        crs_opp_rolling	-- Opposition team crosses\n
-        int_opp_rolling-- Opposition Interceptions\n
-
+        sota_rolling -- Rolling average of shots on target against\n
+        gls_rolling -- Rolling average of goals\n
+        poss_opp_rolling -- Rolling average of opposition possesion\n
+        sot_rolling	-- Rolling average of shots on target\n
+        poss_x_rolling-- ROlling average of posession\n
         ''')
-
-        a = pd.crosstab(index=combined["actual"], columns=combined["predicted"])
-        a = a.div(a.sum(axis=1), axis = 0)
-        fig = px.imshow(a, color_continuous_scale='blues', text_auto=True, x = ['won', 'not won'], y = ['won','not won'])
+        
+        '''Here is the trained model confusion matrix:'''
+        # Confusion Matrix
+        table = pd.crosstab(index=combined["actual"], columns=combined["predicted"])
+        #Have to divide by the sum of each row to maintain consistancy with the random forrest confusion matrix plots. 
+        table = table.div(table.sum(axis=1), axis = 0)
+        fig = px.imshow(table, color_continuous_scale='blues', text_auto=True, x = ['won', 'not won'], y = ['won','not won'])
         st.plotly_chart(fig)
+
+        '''We can also get a graph representation of the XGBtree:'''
+        
+        image = Image.open('XGBoost_Tree.jpg')
+        st.image(image, caption='XGBoost Tree')
