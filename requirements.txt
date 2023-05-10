@@ -5,3 +5,4 @@ pandas==1.5.3
 plotly==5.13.1
 scikit-learn==1.2.1
 streamlit == 1.18.1
+altair==5.0.0
