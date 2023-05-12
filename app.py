@@ -30,31 +30,31 @@ selected_columns = ['team','venue','opponent','venue_code','opp_code','hour','da
 
 
 
-# Title, title image and introductory explanation
-st.title('Champions League Match Prediction')
-# resizing gif
-file_ = open("animation2.gif", "rb")
-contents = file_.read()
-data_url = base64.b64encode(contents).decode("utf-8")
-file_.close()
+# # Title, title image and introductory explanation
+# st.title('Champions League Match Prediction')
+# # resizing gif
+# file_ = open("animation2.gif", "rb")
+# contents = file_.read()
+# data_url = base64.b64encode(contents).decode("utf-8")
+# file_.close()
 
 
-st.markdown(f'<img src="data:image/gif;base64,{data_url}" alt="football gif">',unsafe_allow_html=True,)
+# st.markdown(f'<img src="data:image/gif;base64,{data_url}" alt="football gif">',unsafe_allow_html=True,)
 
-st.caption('Animation curtsey of [mplsoccer](https://mplsoccer.readthedocs.io/en/latest/index.html) and [metrica-sports](https://metrica-sports.com/)', unsafe_allow_html=False)
+# st.caption('Animation curtsey of [mplsoccer](https://mplsoccer.readthedocs.io/en/latest/index.html) and [metrica-sports](https://metrica-sports.com/)', unsafe_allow_html=False)
 
-st.markdown("""
-A **hypothetical** sports channel has asked us to develop a webapp that they can refer to during their broadcasts. The
-brief includes using the statistics obtained in the previous matches and predict weather a team will win a future match given a certain opponent.
+# st.markdown("""
+# A **hypothetical** sports channel has asked us to develop a webapp that they can refer to during their broadcasts. The
+# brief includes using the statistics obtained in the previous matches and predict weather a team will win a future match given a certain opponent.
 
-This app uses a trained [random forrest model](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) to predict champions league matches. The features used to make
-this prediction are engineered from statistics available before the match. 
+# This app uses a trained [random forrest model](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) to predict champions league matches. The features used to make
+# this prediction are engineered from statistics available before the match. 
 
-To operate, choose the team and the opponent as well as the venue form the side bar. Then hit the "Predict Match" button.
+# To operate, choose the team and the opponent as well as the venue form the side bar. Then hit the "Predict Match" button.
 
-Before the prediction some handy comparison between the selected team and opponent are given using normalised team statistics.""")
+# Before the prediction some handy comparison between the selected team and opponent are given using normalised team statistics.""")
 
-st.caption('Data Source: All data is scraped from [FBref](https://fbref.com/en/comps/8/Champions-League-Stats)', unsafe_allow_html=True)
+# st.caption('Data Source: All data is scraped from [FBref](https://fbref.com/en/comps/8/Champions-League-Stats)', unsafe_allow_html=True)
 
 
 # Sidebar
@@ -79,6 +79,9 @@ tm_df['opp_code'] = int(df_rolling[df_rolling['opponent']==selected_opponent]['o
 tm_df['opponent'] = selected_opponent
 tm_df['venue'] = selected_venue
 tm_df['venue_code'] = v_code
+
+
+## NEED TO FIND OUT WHAT IS HAPPENING WITH ETHE OPPOSING TEAM STATS!!! THE MODEL BEHAVIOUR DOES noT mAKE SENSE!!!
 
 
 #Preparing the comparative data for display 
@@ -137,89 +140,89 @@ if st.sidebar.button('Predict Match'):
         st.write("""This section presents a comprehensive comparison between the performance statistics between the teams.
         the presented data is averaged oer the last 3 games for each team and normalised""")
 
-# Plotting the Shooting Comparison
+# # Plotting the Shooting Comparison
 
-        plot_comparison(tm_dfd,opp_dfd,shooting,selected_team, selected_opponent, 'Shooting')
-        expander = st.expander("**Glossary**")
-        expander.markdown('''**gls-rolling** -- Rolling average of goals score\n
-**sh-rolling** -- Rolling average of total shots\n
-**sot-rolling** -- Rolling average of shots on target\n
-**dist-rolling** -- Rolling average of shot distance\n
-**xg-x-rolling** -- Rolling average of expected goals\n
-**fk_rolling** -- Rolling average of free kicks
-''')
+#         plot_comparison(tm_dfd,opp_dfd,shooting,selected_team, selected_opponent, 'Shooting')
+#         expander = st.expander("**Glossary**")
+#         expander.markdown('''**gls-rolling** -- Rolling average of goals score\n
+# **sh-rolling** -- Rolling average of total shots\n
+# **sot-rolling** -- Rolling average of shots on target\n
+# **dist-rolling** -- Rolling average of shot distance\n
+# **xg-x-rolling** -- Rolling average of expected goals\n
+# **fk_rolling** -- Rolling average of free kicks
+# ''')
 
-# Plotting the Goal Keeping Comparison
+# # Plotting the Goal Keeping Comparison
 
-        plot_comparison(tm_dfd,opp_dfd,goalkeeping,selected_team, selected_opponent, 'Gaol Keeping')
-        expander = st.expander("**Glossary**")
-        expander.markdown('''**#OPA-rolling** -- Rolling average of the number of defensive actions outside of penalty area\n
-**sota-rolling** -- Rolling average of shots on target against\n
-**saves-rolling** -- Rolling average of saves\n
-**cs-rolling** -- Rolling average of clean sheets\n
-**cmp%-rolling** -- Rolling average of pass completion percentage\n
-**pksv_rolling** -- Rolling average of saved penalty kicks
-''')
-
-
-# Plotting the Passing Comparison 
-
-        plot_comparison(tm_dfd,opp_dfd,passing,selected_team, selected_opponent, 'Passing')
-        expander = st.expander("**Glossary**")
-        expander.markdown('''
-TotDist-rolling -- Rolling average of total Passing Distance\n
-PrgDist-rolling -- Rolling average of progressive Passing Distance\n
-KP-rolling -- Rolling average of key Passes that directly lead to a shot (assisted shots)\n
-PPA-rolling -- Rolling average of passes into Penalty Area Completed passes into the 18-yard box Not including set pieces\n
-CrsPA-rolling -- Rolling average of crosses into Penalty Area Completed crosses into the 18-yard box Not including set pieces\n
-PrgP-rolling -- Rolling average of progressive Passes
-''')
+#         plot_comparison(tm_dfd,opp_dfd,goalkeeping,selected_team, selected_opponent, 'Gaol Keeping')
+#         expander = st.expander("**Glossary**")
+#         expander.markdown('''**#OPA-rolling** -- Rolling average of the number of defensive actions outside of penalty area\n
+# **sota-rolling** -- Rolling average of shots on target against\n
+# **saves-rolling** -- Rolling average of saves\n
+# **cs-rolling** -- Rolling average of clean sheets\n
+# **cmp%-rolling** -- Rolling average of pass completion percentage\n
+# **pksv_rolling** -- Rolling average of saved penalty kicks
+# ''')
 
 
-# Plotting the Goal and Shot Creation
-        plot_comparison(tm_dfd,opp_dfd,goal_and_shot,selected_team, selected_opponent, 'Goal and Shot Creation')
-        expander = st.expander("**Glossary**")
-        expander.markdown('''
-SCA-rolling -- Rolling average of Shot-Creating Actions\n
-PassLive-rolling -- SCA (PassLive) Rolling average of Completed live-ball passes that lead to a shot attempt\n
-Fld-rolling -- SCA (Fld) Rolling average of Fouls drawn that lead to a shot attempt\n
-TO-rolling -- GCA (TO) Rolling average of Successful take-ons that lead to a goal\n
-Def-rolling -- SCA (Def) Rolling average of Defensive actions that lead to a shot attempt\n
-PassDead-rolling -- SCA (PassDead) Rolling average of Completed dead-ball passes that lead to a shot attempt.\n
-''')
+# # Plotting the Passing Comparison 
+
+#         plot_comparison(tm_dfd,opp_dfd,passing,selected_team, selected_opponent, 'Passing')
+#         expander = st.expander("**Glossary**")
+#         expander.markdown('''
+# TotDist-rolling -- Rolling average of total Passing Distance\n
+# PrgDist-rolling -- Rolling average of progressive Passing Distance\n
+# KP-rolling -- Rolling average of key Passes that directly lead to a shot (assisted shots)\n
+# PPA-rolling -- Rolling average of passes into Penalty Area Completed passes into the 18-yard box Not including set pieces\n
+# CrsPA-rolling -- Rolling average of crosses into Penalty Area Completed crosses into the 18-yard box Not including set pieces\n
+# PrgP-rolling -- Rolling average of progressive Passes
+# ''')
 
 
-#Plotting Defensive Action
-        plot_comparison(tm_dfd,opp_dfd,defence,selected_team, selected_opponent, 'Defensive Actions')
-        expander = st.expander("**Glossary**")
-        expander.markdown('''
-TklW-rolling -- Rolling average of Tackles Won Tackles in which the tackler's team won possession of the ball\n
-Def 3rd-rolling -- Rolling average of Tackles (Def 3rd) Tackles in defensive 1/3\n
-Mid 3rd-rolling -- Rolling average of Tackles (Mid 3rd) Tackles in middle 1/3\n
-Att 3rd-rolling -- Rolling average of Tackles (Att 3rd) Tackles in attacking 1/3\n
-Tkl%-rolling -- Rolling average of % of dribblers tackled Percentage of dribblers tackled Dribblers tackled divided by number of attempts to challenge an opposing dribbler\n
-Lost-rolling -- Rolling average of Challenges Lost Number of unsuccessful attempts to challenge a dribbling player
-''')
+# # Plotting the Goal and Shot Creation
+#         plot_comparison(tm_dfd,opp_dfd,goal_and_shot,selected_team, selected_opponent, 'Goal and Shot Creation')
+#         expander = st.expander("**Glossary**")
+#         expander.markdown('''
+# SCA-rolling -- Rolling average of Shot-Creating Actions\n
+# PassLive-rolling -- SCA (PassLive) Rolling average of Completed live-ball passes that lead to a shot attempt\n
+# Fld-rolling -- SCA (Fld) Rolling average of Fouls drawn that lead to a shot attempt\n
+# TO-rolling -- GCA (TO) Rolling average of Successful take-ons that lead to a goal\n
+# Def-rolling -- SCA (Def) Rolling average of Defensive actions that lead to a shot attempt\n
+# PassDead-rolling -- SCA (PassDead) Rolling average of Completed dead-ball passes that lead to a shot attempt.\n
+# ''')
 
 
-#Plotting Possession
+# #Plotting Defensive Action
+#         plot_comparison(tm_dfd,opp_dfd,defence,selected_team, selected_opponent, 'Defensive Actions')
+#         expander = st.expander("**Glossary**")
+#         expander.markdown('''
+# TklW-rolling -- Rolling average of Tackles Won Tackles in which the tackler's team won possession of the ball\n
+# Def 3rd-rolling -- Rolling average of Tackles (Def 3rd) Tackles in defensive 1/3\n
+# Mid 3rd-rolling -- Rolling average of Tackles (Mid 3rd) Tackles in middle 1/3\n
+# Att 3rd-rolling -- Rolling average of Tackles (Att 3rd) Tackles in attacking 1/3\n
+# Tkl%-rolling -- Rolling average of % of dribblers tackled Percentage of dribblers tackled Dribblers tackled divided by number of attempts to challenge an opposing dribbler\n
+# Lost-rolling -- Rolling average of Challenges Lost Number of unsuccessful attempts to challenge a dribbling player
+# ''')
 
-        plot_comparison(tm_dfd,opp_dfd,possession,selected_team, selected_opponent, 'Possession')
-        expander = st.expander("**Glossary**")
-        expander.markdown('''
-Poss-rolling -- Rolling average of Possession Calculated as the percentage of passes attempted\n
-Touches-rolling -- Rolling average of Number of times a player touched the ball.\n
-Succ%-rolling -- Rolling average of Successful Take-On %Percentage of Take-Ons Completed Successfully\n
-Tkld%-rolling -- Rolling average of Tackled During Take-On Percentage Percentage of time tackled by a defender during a take-on attempt Minimum .5 take-ons per squad game to qualify as a leader\n
-rgC-rolling -- Rolling average of Progressive Carries Carries that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any carry into the penalty area. Excludes carries which end in the defending 50% of the pitch\n
-PrgR-rolling -- Rolling average of Progressive Passes Rec Progressive Passes Received Completed passes that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any completed pass into the penalty area. Excludes passes from the defending 40% of the pitch
-''')
+
+# #Plotting Possession
+
+#         plot_comparison(tm_dfd,opp_dfd,possession,selected_team, selected_opponent, 'Possession')
+#         expander = st.expander("**Glossary**")
+#         expander.markdown('''
+# Poss-rolling -- Rolling average of Possession Calculated as the percentage of passes attempted\n
+# Touches-rolling -- Rolling average of Number of times a player touched the ball.\n
+# Succ%-rolling -- Rolling average of Successful Take-On %Percentage of Take-Ons Completed Successfully\n
+# Tkld%-rolling -- Rolling average of Tackled During Take-On Percentage Percentage of time tackled by a defender during a take-on attempt Minimum .5 take-ons per squad game to qualify as a leader\n
+# rgC-rolling -- Rolling average of Progressive Carries Carries that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any carry into the penalty area. Excludes carries which end in the defending 50% of the pitch\n
+# PrgR-rolling -- Rolling average of Progressive Passes Rec Progressive Passes Received Completed passes that move the ball towards the opponent's goal line at least 10 yards from its furthest point in the last six passes, or any completed pass into the penalty area. Excludes passes from the defending 40% of the pitch
+# ''')
         
 
         ## Prediction Part
         #        
         st.header("Game Prediction")
-        prediction = XGB_model.predict(tm_df[all_cols])
+        prediction = XGB_model.predict(tm_df[selected_columns])
         if prediction == 1:
             st.write(selected_team ,""" will **WIN** the match""")
         else:
@@ -229,36 +232,36 @@ PrgR-rolling -- Rolling average of Progressive Passes Rec Progressive Passes Rec
                         the performance in past five games for each of the teams have been considered.""")
 
 
-        # Plotting Fature Importances
-        fig, ax = plt.subplots()
-        xgb_imp = pd.Series(XGB_model.get_booster().get_score(importance_type= 'gain'))
-        xgb_imp = xgb_imp/len(all_cols)
-        # Sort importances
-        xgb_imp_sorted = xgb_imp.sort_values()
-        # Draw a horizontal barplot of importances_sorted
-        xgb_imp_sorted.plot(kind='barh', color='blue', figsize = (5,10), grid = True, xlabel = 'Feature Importances')
-        plt.title('Feature Importance for XGBoost Algorithem')
-        st.pyplot(fig)
+        # # Plotting Fature Importances
+        # fig, ax = plt.subplots()
+        # xgb_imp = pd.Series(XGB_model.get_booster().get_score(importance_type= 'gain'))
+        # xgb_imp = xgb_imp/len(all_cols)
+        # # Sort importances
+        # xgb_imp_sorted = xgb_imp.sort_values()
+        # # Draw a horizontal barplot of importances_sorted
+        # xgb_imp_sorted.plot(kind='barh', color='blue', figsize = (5,10), grid = True, xlabel = 'Feature Importances')
+        # plt.title('Feature Importance for XGBoost Algorithem')
+        # st.pyplot(fig)
 
-        '''The glossary for the top 5 most important parameters are given below:'''
-        expander = st.expander("**Glossary**")
-        expander.markdown('''
-        sota_rolling -- Rolling average of shots on target against\n
-        gls_rolling -- Rolling average of goals\n
-        poss_opp_rolling -- Rolling average of opposition possesion\n
-        sot_rolling	-- Rolling average of shots on target\n
-        poss_x_rolling-- ROlling average of posession\n
-        ''')
+        # '''The glossary for the top 5 most important parameters are given below:'''
+        # expander = st.expander("**Glossary**")
+        # expander.markdown('''
+        # sota_rolling -- Rolling average of shots on target against\n
+        # gls_rolling -- Rolling average of goals\n
+        # poss_opp_rolling -- Rolling average of opposition possesion\n
+        # sot_rolling	-- Rolling average of shots on target\n
+        # poss_x_rolling-- ROlling average of posession\n
+        # ''')
         
-        '''Here is the trained model confusion matrix:'''
-        # Confusion Matrix
-        table = pd.crosstab(index=combined["actual"], columns=combined["predicted"])
-        #Have to divide by the sum of each row to maintain consistancy with the random forrest confusion matrix plots. 
-        table = table.div(table.sum(axis=1), axis = 0)
-        fig = px.imshow(table, color_continuous_scale='blues', text_auto=True, x = ['won', 'not won'], y = ['won','not won'])
-        st.plotly_chart(fig)
+        # '''Here is the trained model confusion matrix:'''
+        # # Confusion Matrix
+        # table = pd.crosstab(index=combined["actual"], columns=combined["predicted"])
+        # #Have to divide by the sum of each row to maintain consistancy with the random forrest confusion matrix plots. 
+        # table = table.div(table.sum(axis=1), axis = 0)
+        # fig = px.imshow(table, color_continuous_scale='blues', text_auto=True, x = ['won', 'not won'], y = ['won','not won'])
+        # st.plotly_chart(fig)
 
-        '''We can also get a graph representation of the XGBtree:'''
+        # '''We can also get a graph representation of the XGBtree:'''
         
-        image = Image.open('XGBoost_Tree.jpg')
-        st.image(image, caption='XGBoost Tree')
+        # image = Image.open('XGBoost_Tree.jpg')
+        # st.image(image, caption='XGBoost Tree')
