@@ -27,13 +27,13 @@ app.py -- The streamit app that we can deploy to the cloud.
 
 - Create a project in GCP. 
 - build the project from your repository as below:
-![Build1](Build1.png)
-![Build2](Build2.png)
-![Build3](Build3.png)
+![Build1](img/Build1.png)
+![Build2](img/Build2.png)
+![Build3](img/Build3.png)
 
 - Deploy the project, I use choice 30 given my location. 
-![Deploy1](Deploy1.png)
-![Deploy2](Deploy2.png)
+![Deploy1](img/Deploy1.png)
+![Deploy2](img/Deploy2.png)
 
 Given GCP charges money to keep the project running, I have also deployed in this cheaper platform [here](https://cl-prediction.herokuapp.com/):
 
